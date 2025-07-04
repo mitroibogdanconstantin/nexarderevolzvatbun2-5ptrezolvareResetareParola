@@ -546,8 +546,12 @@ export const auth = {
 		console.log("🔑 Sending password reset email to:", email);
 
 		try {
+			// Modificare aici: Adăugăm URL-ul complet pentru resetarea parolei
+			const resetPasswordURL = `${window.location.origin}/auth/reset-password`;
+			console.log("🔗 Reset password redirect URL:", resetPasswordURL);
+			
 			const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-				redirectTo: `${window.location.origin}/auth/reset-password`,
+				redirectTo: resetPasswordURL,
 			});
 
 			if (error) {

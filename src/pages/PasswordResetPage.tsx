@@ -19,11 +19,10 @@ const PasswordResetPage = () => {
     window.scrollTo(0, 0);
     
     // Verificăm dacă avem un token valid în URL
-    const params = new URLSearchParams(location.search);
-    const token = params.get('token');
-    const type = params.get('type');
+    const hash = location.hash;
+    const type = new URLSearchParams(hash.substring(hash.indexOf('?') + 1)).get('type');
     
-    if (!token || type !== 'recovery') {
+    if (!hash.includes('access_token=') || type !== 'recovery') {
       setError('Link invalid sau expirat. Te rugăm să soliciți un nou link de resetare a parolei.');
     }
   }, [location]);
@@ -59,16 +58,6 @@ const PasswordResetPage = () => {
     try {
       setIsResetting(true);
       setError(null);
-      
-      // Obținem token-ul din URL
-      const params = new URLSearchParams(location.search);
-      const token = params.get('token');
-      
-      if (!token) {
-        setError('Link invalid sau expirat. Te rugăm să soliciți un nou link de resetare a parolei.');
-        setIsResetting(false);
-        return;
-      }
       
       // Resetăm parola
       const { error } = await supabase.auth.updateUser({
